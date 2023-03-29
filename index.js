@@ -255,19 +255,34 @@ client.on(Events.InteractionCreate, async (interaction) => {
             );
 
         } else {
-            const file = fs.createWriteStream(join(__dirname, 'bans.json'));
-            file.write(JSON.stringify(bans));
-            file.end();
+            // const file = fs.createWriteStream(join(__dirname, 'bans.json'));
+            // file.write(JSON.stringify(bans));
+            // file.end();
+
+            // const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
+            // interaction.editReply({ files: [attachment] });
+
+            // //Delete the file
+            // fs.unlink('bans.json', (err) => {
+            //     if (err) {
+            //         console.error(err)
+            //     }
+            // });
+            //Make a file async and await the write
+            const file = await fs.promises.open(join(__dirname, 'bans.json'), 'w');
+            await file.writeFile(JSON.stringify(bans));
+            await file.close();
 
             const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
             interaction.editReply({ files: [attachment] });
-
+            
             //Delete the file
-            fs.unlink('bans.json', (err) => {
+            fs.unlink(join(__dirname, 'bans.json'), (err) => {
                 if (err) {
                     console.error(err)
                 }
-            });
+            }
+            );
         }
     }
 });
