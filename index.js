@@ -238,21 +238,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 ws.cell(index + 2, 4).string(date).style(style);
             });
 
-            // Save to file
-            wb.write(join(__dirname, 'bans.xlsx'), (err) => {
-                if (err) { console.error(err) }
 
-                const attachment = new AttachmentBuilder(join(__dirname, 'bans.xlsx'));
-                interaction.editReply({ files: [attachment] });
+            const attachment = new AttachmentBuilder(wb.writeToBuffer(), {
+                name: 'bans.xlsx',
+            })
+            interaction.editReply({ files: [attachment] });
 
-                //Delete the file
-                fs.unlink('bans.xlsx', (err) => {
-                    if (err) {
-                        console.error(err)
-                    }
-                });
-            }
-            );
 
         } else {
             // const file = fs.createWriteStream(join(__dirname, 'bans.json'));
