@@ -268,27 +268,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
             //         console.error(err)
             //     }
             // });
-            //Make a file async and await the write
-            //Check if the file not exists
-            if (!fs.existsSync(join(__dirname, 'bans.json'))) {
-                //Create the file
-                await fs.promises.writeFile(join(__dirname, 'bans.json'), '');
-            }
+            //Make JSON a buffer and send it as an attachment
 
-            const file = await fs.promises.open(join(__dirname, 'bans.json'), 'w');
-            await file.writeFile(JSON.stringify(bans));
-            await file.close();
-
-            const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
+            const attachment = new AttachmentBuilder(Buffer.from(JSON.stringify(bans)), {
+                name: 'bans.json',
+            })
             interaction.editReply({ files: [attachment] });
             
-            //Delete the file
-            fs.unlink(join(__dirname, 'bans.json'), (err) => {
-                if (err) {
-                    console.error(err)
-                }
-            }
-            );
         }
     }
 });
