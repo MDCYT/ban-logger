@@ -255,20 +255,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
             );
 
         } else {
-            fs.writeFile(join(__dirname, 'bans.json'), JSON.stringify(bans), (err) => {
+            const file = fs.createWriteStream(join(__dirname, 'bans.json'));
+            file.write(JSON.stringify(bans));
+            file.end();
+
+            const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
+            interaction.editReply({ files: [attachment] });
+
+            //Delete the file
+            fs.unlink('bans.json', (err) => {
                 if (err) {
-                    console.error(err);
-                    return interaction.editReply('Ha ocurrido un error al descargar los bans.');
+                    console.error(err)
                 }
-
-                const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
-                interaction.editReply({ files: [attachment] });
-
-                fs.unlink('bans.json', (err) => {
-                    if (err) {
-                        console.error(err)
-                    }
-                });
             });
         }
     }
