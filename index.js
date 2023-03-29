@@ -9,6 +9,7 @@ const Utils = require('./utils/utils.js');
 const { Client, Events, GatewayIntentBits, REST, Routes, AttachmentBuilder } = require('discord.js');
 var xl = require('excel4node');
 var fs = require('fs');
+var { join } = require('path');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildModeration, GatewayIntentBits.GuildMessages] });
 
@@ -238,10 +239,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
 
             // Save to file
-            wb.write('bans.xlsx', function (err, stats) {
+            wb.write(join(__dirname, 'bans.xlsx'), (err) => {
                 if (err) { console.error(err) }
 
-                const attachment = new AttachmentBuilder('bans.xlsx');
+                const attachment = new AttachmentBuilder(join(__dirname, 'bans.xlsx'));
                 interaction.editReply({ files: [attachment] });
 
                 //Delete the file
@@ -254,12 +255,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             );
 
         } else {
-            await fs.writeFile('bans.json', JSON.stringify(bans), (err) => {
+            fs.writeFile(join(__dirname, 'bans.json'), JSON.stringify(bans), (err) => {
                 if (err) {
                     console.error(err);
                 }
 
-                const attachment = new AttachmentBuilder('bans.json');
+                const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
                 interaction.editReply({ files: [attachment] });
 
                 fs.unlink('bans.json', (err) => {
