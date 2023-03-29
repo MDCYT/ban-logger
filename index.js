@@ -269,6 +269,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             //     }
             // });
             //Make a file async and await the write
+            //Check if the file not exists
+            if (!fs.existsSync(join(__dirname, 'bans.json'))) {
+                //Create the file
+                await fs.promises.writeFile(join(__dirname, 'bans.json'), '');
+            }
+
             const file = await fs.promises.open(join(__dirname, 'bans.json'), 'w');
             await file.writeFile(JSON.stringify(bans));
             await file.close();
