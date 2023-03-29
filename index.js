@@ -8,8 +8,6 @@ const Utils = require('./utils/utils.js');
 
 const { Client, Events, GatewayIntentBits, REST, Routes, AttachmentBuilder } = require('discord.js');
 var xl = require('excel4node');
-var fs = require('fs');
-var { join } = require('path');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildModeration, GatewayIntentBits.GuildMessages] });
 
@@ -238,11 +236,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 ws.cell(index + 2, 4).string(date).style(style);
             });
 
+            return wb.writeToBuffer().then((buffer) => {
+                const attachment = new AttachmentBuilder(buffer, {
+                    name: 'bans.xlsx',
+                })
+                return interaction.editReply({ files: [attachment] });
+            }).catch((err) => {
+                console.log(err);
+                return interaction.editReply('Ha ocurrido un error al generar el archivo.');
+            });
 
-            const attachment = new AttachmentBuilder(wb.writeToBuffer(), {
-                name: 'bans.xlsx',
-            })
-            interaction.editReply({ files: [attachment] });
 
 
         } else {
