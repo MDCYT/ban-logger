@@ -258,6 +258,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             fs.writeFile(join(__dirname, 'bans.json'), JSON.stringify(bans), (err) => {
                 if (err) {
                     console.error(err);
+                    return interaction.editReply('Ha ocurrido un error al descargar los bans.');
                 }
 
                 const attachment = new AttachmentBuilder(join(__dirname, 'bans.json'));
