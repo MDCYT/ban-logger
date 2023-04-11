@@ -204,7 +204,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const format = interaction.options.getString('format') || 'json';
 
         //Get the number of bans in the specified period
-        const bans = await Ban.find({ guildID: interaction.guild.id, bannedAt: Utils.getPeriod(period, type) });
+        const bans = await Ban.find({ guildID: interaction.guild.id, bannedAt: Utils.getPeriod(period, type) }, { _id: 0, __v: 0 });
 
 
         if (format == "excel") {
@@ -268,7 +268,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 name: 'bans.json',
             })
             interaction.editReply({ files: [attachment] });
-            
         }
     }
 });
