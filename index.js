@@ -173,7 +173,9 @@ client.on(Events.GuildBanAdd, async (guildBan) => {
 client.on(Events.GuildBanRemove, async (guildBan) => {
     const ban = Ban.findOne({ guildID: guildBan.guild.id, userID: guildBan.user.id });
     if (ban) {
-        await ban.delete();
+        // Delete Ban with moongose
+        await ban.destroy(); 		// DESTROY DOES NOT CLOSE THE CONNECTION TO THE DB.
+
     }
 
     console.log(`User ${guildBan.user.tag} was unbanned from ${guildBan.guild.name} at ${new Date()}`);
